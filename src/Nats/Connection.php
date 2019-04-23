@@ -242,9 +242,10 @@ class Connection
             throw Exception::forStreamSocketClientError($errstr, $errno);
         }
 
-        $timeout      = number_format($timeout, 3, '.', '');;
-        $seconds      = floor($timeout);
-        $microseconds = (($timeout - $seconds) * 1000);
+        $seconds = intval($timeout);
+        if ($seconds < 0) throw new \Exception('seconds variable equal to: ' . $seconds . ' something definitely is not correct here');
+        $microseconds = intval(round($timeout - $seconds, 3) * 1000);
+
         stream_set_timeout($fp, $seconds, $microseconds);
 
         return $fp;
